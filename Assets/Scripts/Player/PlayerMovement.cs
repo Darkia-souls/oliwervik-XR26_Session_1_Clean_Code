@@ -50,16 +50,22 @@ public class PlayerMovement : MonoBehaviour
             
     private void HandleMovement()
     {
-            Vector2 move = input.MoveInput;
-            Vector3 direction = transform.forward * move.y + transform.right * move.x;
-            Vector3 velocity = direction.normalized * moveSpeed;
+        Vector2 move = input.MoveInput;
+        Vector3 direction = transform.forward * move.y + transform.right * move.x;
+        Vector3 velocity = direction.normalized * moveSpeed;
+
+        // Apply velocity while maintaining vertical (Y) velocity
+        Vector3 currentVelocity = rb.linearVelocity;
+        rb.linearVelocity = new Vector3(velocity.x, currentVelocity.y, velocity.z);
     }
+
     
     private void Jump()
         {
             rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
             isGrounded = false;
         }
+        
      private void OnCollisionEnter(Collision collision)
          {
              if (collision.gameObject.CompareTag("Ground"))
